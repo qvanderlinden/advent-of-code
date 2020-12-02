@@ -1,4 +1,4 @@
-package main
+package lib
 
 import (
 	"io/ioutil"
@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-func GetValuesFromFile(filepath string) ([]int, error) {
+func GetLinesFromFile(filepath string) ([]string, error) {
 	content, err := ioutil.ReadFile(filepath)
 	if (err != nil) {
 		return nil, err
@@ -14,6 +14,15 @@ func GetValuesFromFile(filepath string) ([]int, error) {
 
 	contentStr := string(content)
 	lines := strings.Split(contentStr, "\n")
+	return lines, nil
+}
+
+func GetValuesFromFile(filepath string) ([]int, error) {
+	lines, err := GetLinesFromFile(filepath)
+	if (err != nil) {
+		return nil, err
+	}
+
 	values := make([]int, len(lines))
 	for i, v := range lines {
 		val, err := strconv.Atoi(v)

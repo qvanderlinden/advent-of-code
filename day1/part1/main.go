@@ -1,12 +1,14 @@
 package main
 
 import (
+	"aoc/lib"
 	"fmt"
 	"log"
+	"os"
 )
 
 func main() {
-	values, err := GetValuesFromFile("./data/input.txt")
+	values, err := lib.GetValuesFromFile(os.Args[1])
 	if (err != nil) {
 		log.Fatal(err)
 	}
