@@ -3,6 +3,9 @@ package main
 import (
 	"aoc/lib"
 	"fmt"
+	"log"
+	"strconv"
+	"strings"
 	"os"
 )
 
@@ -32,6 +35,10 @@ func CountTrees(forest Forest, slope Slope) (int) {
 }
 
 func main() {
+	if (len(os.Args) != 3) {
+		log.Fatal("[Usage]: <bin> <input-file> <slopes>\n<slopes> contains comma separated slope entities. A slope entity has the <dx>:<dy> format")
+	}
+
 	lines, err := lib.GetLinesFromFile(os.Args[1])
 	lib.CheckErr(err)
 	
@@ -49,8 +56,23 @@ func main() {
 	}
 
 	forest := Forest{ width, height, trees }
-	slope := Slope{ 3, 1 }
-
-	result := CountTrees(forest, slope)
+	
+	// get slopes
+	slopesArg := os.Args[2]
+	slopesStrs := strings.Split(slopesArg, ",")
+	slopes := make([]Slope, len(slopesStrs))
+	for i, slopeStr := range(slopesStrs) {
+		d := strings.Split(slopeStr, ":")
+		dx, err := strconv.Atoi(d[0])
+		lib.CheckErr(err)
+		dy, err := strconv.Atoi(d[1])
+		lib.CheckErr(err)
+		slopes[i] = Slope{ dx, dy }
+	}
+	
+	result := 1
+	for _, slope := range slopes {
+		result *= CountTrees(forest, slope)
+	}
 	fmt.Println(result)
 }
