@@ -4,28 +4,18 @@ import (
 	"testing"
 )
 
-type UnitTest struct {
-	fName string
-	f func(string) (uint64, error)
-	sequence string
-	expectedResult uint64
-}
-
-func TestDecodings(t *testing.T) {
-	unitTests := []UnitTest{
-		{ "DecodeRow", DecodeRow, "FBFBBFF", 44 },
-		{ "DecodeSeat", DecodeSeat, "RLR", 5 },
+func TestDecodeBoardingPass(t *testing.T) {
+	sequence := "FBFBBFFRLR"
+	expectedResult := BoardingPass{ 44, 5, 357 }
+	
+	result, err := DecodeBoardingPass(sequence)
+	if (err != nil) {
+		t.Logf("DecodeBoardingPass returned the following error: %v", err)
+		t.FailNow()
 	}
 
-	for _, unitTest := range unitTests {
-		result, err := unitTest.f(unitTest.sequence)
-		if (err != nil) {
-			t.Errorf("%s returned the following error: %v", unitTest.fName, err)
-			continue
-		}
-
-		if (result != unitTest.expectedResult) {
-			t.Errorf("%s(%s) = %d; expected %d", unitTest.fName, unitTest.sequence, result, unitTest.expectedResult)
-		}
+	isResultCorrect := result.row == expectedResult.row && result.seat == expectedResult.seat && result.seatId == expectedResult.seatId
+	if (!isResultCorrect) {
+		t.Errorf("DecodeBoardingPass(%s) = %v; expected %v", sequence, result, expectedResult)
 	}
 }
