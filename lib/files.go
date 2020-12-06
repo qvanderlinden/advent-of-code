@@ -2,6 +2,7 @@ package lib
 
 import (
 	"io/ioutil"
+	"regexp"
 	"strconv"
 	"strings"
 )
@@ -15,6 +16,17 @@ func GetLinesFromFile(filepath string) ([]string, error) {
 	contentStr := string(content)
 	lines := strings.Split(contentStr, "\n")
 	return lines, nil
+}
+
+func GetLineGroupsFromFile(filepath string) ([]string) {
+	rawContent, err := ioutil.ReadFile(filepath)
+	CheckErr(err)
+
+	content := string(rawContent)
+	re := regexp.MustCompile(`(?m:\n\s*\n+)`)
+	groups := re.Split(content, -1)
+
+	return groups
 }
 
 func GetValuesFromFile(filepath string) ([]int, error) {
